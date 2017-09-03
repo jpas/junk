@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+'''
+signal-cli wrapper
+
+signal-cli can be found at https://github.com/AsamK/signal-cli
+'''
 
 import argparse
 import json
