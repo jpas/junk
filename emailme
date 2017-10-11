@@ -1,0 +1,46 @@
+#!/usr/bin/env python3
+
+import json
+import sys
+from email.mime.text import MIMEText
+from os import path
+from smtplib import SMTP
+
+def main(args):
+    secret = {
+        'user': None, # set this to you nsid
+        'email': None, # set this to the email
+        'pass': None, # set this to your password
+        'server': 'smtp.usask.ca',
+        'port': 587,
+    }
+
+    secret_file = 'emailme.secret.json' # if you use a config file instead
+
+    # load the config file and override the secret dictionary
+    if path.isfile(secret_file):
+        with open(secret_file) as secret_file:
+            secret.update(json.load(secret_file))
+
+    user = secret['user']
+    pw = secret['pass']
+
+    me = secret['email']
+    subject = ' '.join(args[1])
+
+    assert user is not None
+    assert pw is not None
+    assert me is not None
+
+    message = MIMEText(sys.stdin.read())
+    message['Subject'] = subject
+    message['From'] = me
+    message['To'] = me
+
+    with SMTP(secret['server'], secret['port']) as smtp:
+        smtp.starttls()
+        smtp.login(user, pw)
+        smtp.send_message(message)
+
+if __name__ == '__main__':
+    exit(main(sys.argv[1:]))
