@@ -3,6 +3,7 @@ import time
 from urllib.request import urlretrieve
 from collections import defaultdict
 from contextlib import contextmanager
+from itertools import islice, chain
 
 import logging
 import requests
@@ -78,6 +79,17 @@ def context():
     c.close()
     # there will still be errors about unclosed connections for some reason...
 
+
+def chunk(it, n):
+    it = iter(it)
+    while ...:
+        try:
+            f = next(it)
+        except StopIteration:
+            return
+        yield chain([f], islice(it, n-1))
+
+
 with context() as (s_client, s_user, s_library):
     for artist, albums in artists.items():
         s = s_client.search(artist, types=['artist'])['artists']
@@ -95,7 +107,8 @@ with context() as (s_client, s_user, s_library):
 
             if same:
                 s_albums = [s_a for a, s_a in s_albums.items() if a in same]
-                s_library.save_albums(*s_albums)
+                for c in chunk(s_albums, 50):
+                    s_library.save_albums(*c)
                 log.debug(f'Followed {artist}')
 
             break
