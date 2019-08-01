@@ -6,14 +6,19 @@ from contextlib import contextmanager
 
 import logging
 import requests
-from gmusicapi import Mobileclient as MobileClient
 import spotify.sync as spotify
+from gmusicapi import Mobileclient as MobileClient
+from dotenv import load_dotenv
+
+load_dotenv()
 
 log = logging.getLogger(__name__)
 
 SPOTIFY_CLIENT_ID = os.environ.get('SPOTIFY_CLIENT_ID')
 SPOTIFY_CLIENT_SECRET = os.environ.get('SPOTIFY_CLIENT_SECRET')
 SPOTIFY_OAUTH2_TOKEN = os.environ.get('SPOTIFY_OAUTH2_TOKEN')
+
+bad = False
 
 if not SPOTIFY_CLIENT_ID:
     print('SPOTIFY_CLIENT_ID environment variable not set. Generate one at https://developer.spotify.com/dashboard/applications')
